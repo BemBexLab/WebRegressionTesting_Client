@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
       {
         source: "/api/:path*",
         destination: `${backendBaseUrl}/api/:path*`
-      },
-      {
-        source: "/storage/:path*",
-        destination: `${backendBaseUrl}/storage/:path*`
       }
     ];
   }

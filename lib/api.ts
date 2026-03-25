@@ -174,6 +174,7 @@ export type MonitorResponse = {
 
 export function imageUrl(path: string | null) {
   if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return path;
   return `${API_BASE || FALLBACK_API_BASE}${path}`;
 }
 
