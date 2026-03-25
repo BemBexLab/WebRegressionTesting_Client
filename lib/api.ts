@@ -1,5 +1,4 @@
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
-const DEPLOYED_API_BASE = "https://websiteregressionsaas-ku232qxh.b4a.run";
 
 function normalizeApiBase(input: string) {
   if (!/^https?:\/\//i.test(input)) {
@@ -18,16 +17,11 @@ function normalizeApiBase(input: string) {
 }
 
 function resolveFallbackApiBase() {
-  if (typeof window === "undefined") {
-    return DEPLOYED_API_BASE;
-  }
-
-  const hostname = window.location.hostname.toLowerCase();
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
+  if (process.env.NODE_ENV !== "production") {
     return "http://127.0.0.1:5000";
   }
 
-  return DEPLOYED_API_BASE;
+  return "";
 }
 
 const FALLBACK_API_BASE = resolveFallbackApiBase();
@@ -35,6 +29,11 @@ const API_BASE = normalizeApiBase(RAW_API_BASE);
 
 async function apiFetch(path: string, init?: RequestInit) {
   const base = API_BASE || FALLBACK_API_BASE;
+  if (!base) {
+    throw new Error(
+      "Missing NEXT_PUBLIC_API_BASE_URL in production. Set it to your backend origin, e.g. https://your-backend.example.com"
+    );
+  }
   const primaryUrl = `${base}${path}`;
 
   try {
