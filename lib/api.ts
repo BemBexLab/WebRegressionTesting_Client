@@ -1,5 +1,21 @@
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
-const DEPLOYED_API_BASE = "https://web-regression-testing-server-fawn.vercel.app";
+const DEPLOYED_API_BASE = "https://websiteregressionsaas-ku232qxh.b4a.run";
+
+function normalizeApiBase(input: string) {
+  if (!/^https?:\/\//i.test(input)) {
+    return "";
+  }
+
+  const trimmed = input.replace(/\/+$/, "");
+  if (/\/api\/health$/i.test(trimmed)) {
+    return trimmed.replace(/\/api\/health$/i, "");
+  }
+  if (/\/health$/i.test(trimmed)) {
+    return trimmed.replace(/\/health$/i, "");
+  }
+
+  return trimmed;
+}
 
 function resolveFallbackApiBase() {
   if (typeof window === "undefined") {
@@ -15,7 +31,7 @@ function resolveFallbackApiBase() {
 }
 
 const FALLBACK_API_BASE = resolveFallbackApiBase();
-const API_BASE = /^https?:\/\//i.test(RAW_API_BASE) ? RAW_API_BASE : "";
+const API_BASE = normalizeApiBase(RAW_API_BASE);
 
 async function apiFetch(path: string, init?: RequestInit) {
   const base = API_BASE || FALLBACK_API_BASE;
