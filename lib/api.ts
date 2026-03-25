@@ -17,12 +17,13 @@ function resolveFallbackApiBase() {
 const FALLBACK_API_BASE = resolveFallbackApiBase();
 
 async function apiFetch(path: string, init?: RequestInit) {
-  const primaryUrl = `${API_BASE}${path}`;
+  const base = API_BASE || FALLBACK_API_BASE;
+  const primaryUrl = `${base}${path}`;
 
   try {
     return await fetch(primaryUrl, init);
   } catch (primaryError) {
-    if (API_BASE) {
+    if (base === FALLBACK_API_BASE) {
       throw primaryError;
     }
 
