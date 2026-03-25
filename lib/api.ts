@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
+const RAW_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
 const DEPLOYED_API_BASE = "https://web-regression-testing-server-fawn.vercel.app";
 
 function resolveFallbackApiBase() {
@@ -15,6 +15,7 @@ function resolveFallbackApiBase() {
 }
 
 const FALLBACK_API_BASE = resolveFallbackApiBase();
+const API_BASE = /^https?:\/\//i.test(RAW_API_BASE) ? RAW_API_BASE : "";
 
 async function apiFetch(path: string, init?: RequestInit) {
   const base = API_BASE || FALLBACK_API_BASE;
