@@ -1,5 +1,20 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
-const FALLBACK_API_BASE = "http://127.0.0.1:5000";
+const DEPLOYED_API_BASE = "https://web-regression-testing-server-fawn.vercel.app";
+
+function resolveFallbackApiBase() {
+  if (typeof window === "undefined") {
+    return DEPLOYED_API_BASE;
+  }
+
+  const hostname = window.location.hostname.toLowerCase();
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return "http://127.0.0.1:5000";
+  }
+
+  return DEPLOYED_API_BASE;
+}
+
+const FALLBACK_API_BASE = resolveFallbackApiBase();
 
 async function apiFetch(path: string, init?: RequestInit) {
   const primaryUrl = `${API_BASE}${path}`;
