@@ -39,7 +39,7 @@ async function apiFetch(path: string, init?: RequestInit) {
   try {
     return await fetch(primaryUrl, init);
   } catch (primaryError) {
-    if (base === FALLBACK_API_BASE) {
+    if (!FALLBACK_API_BASE || base === FALLBACK_API_BASE) {
       throw primaryError;
     }
 
